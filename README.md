@@ -1,8 +1,6 @@
-# Forest path service (educational sample)
+# Educational sample
 
-Forest path service is an educational service. The purpose is to demonstrate weather-aware  calculator of actual trip time between two given geo points.
-
-Demonstrated technologies:
+Forest path service is educational sample to demonstrate technologies:
 1. Traefik as Load balancer
 2. Openresty with Lua as Proxy server and templating engine
 4. Swagger as OpenAPI description
