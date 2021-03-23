@@ -22,9 +22,13 @@ class EventsTable extends React.Component {
     render() {
         return <div>
             <button onClick={this.handleReload}>Reload</button>
-            <ul>
-                {this.state.events.map((event) => <li>{event.id} {event.name}</li>)}
-            </ul>
+            <h3>Event table</h3>
+            <h4>Demonstration of typescript fetch with JSX</h4>
+            <table>
+               {this.state.events.map(
+                   (event) => 
+                        <tr><td>{event.id}</td><td>{event.name}</td></tr>)}
+            </table>
         </div>
     }
 }
