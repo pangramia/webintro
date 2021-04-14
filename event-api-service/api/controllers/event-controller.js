@@ -11,7 +11,11 @@
   It is a good idea to list the modules that your application depends on in the package.json in the project root
  */
 var util = require('util');
-var faker = require('faker');
+const jsf = require('json-schema-faker');
+const chance = require('chance')
+const faker = require('faker')
+jsf.extend('chance', () => new chance.Chance());
+jsf.extend('faker', () => faker);
 /*
  Once you 'require' a module you can reference the things that it exports.  These are defined in module.exports.
 
@@ -25,9 +29,66 @@ var faker = require('faker');
   we specify that in the exports of this module that 'hello' maps to the function named 'hello'
  */
 module.exports = {
-  events: getEvents
+  events: getEvents,
+  event: getEvent
 };
 
+var schema = {
+  "type": "array",
+  "minItems": 1,
+  "maxItems": 7,
+  "items": {
+    "type": "object",
+    "required": [
+      "id", "place", "time", "image", "band", "date"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "faker": "random.number"
+      },
+      "date": {
+        "type": "string",
+        "faker": "date.future"
+      },
+      "band": {
+        "type": "string",
+        "faker": "company.companyName"
+      },
+      "image": {
+        "type": "string",
+        "faker": "image.imageUrl"
+      },
+      "time": {
+        "type": "string",
+        "faker": "time.recent"
+      },
+      "place": {
+        "type": "string",
+        "faker": "address.streetAddress"
+      },
+      "songs": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "faker": "random.number"
+            },
+            "title": {
+              "type": "string",
+              "faker": "music.genre"
+            }
+          },
+        },
+      }
+    }
+  }
+}
 /*
   Functions in a127 controllers used for operations should take two parameters:
 
@@ -37,23 +98,28 @@ module.exports = {
 function getEvents(req, res) {
   // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
   var date = req.swagger.params.date.value || '2020-03-01';
-  var name = util.format('Festival %s', date);
+  var title = util.format('Hey %s', date);
 
   // this sends back a JSON response which is a single string
+  jsf.resolve(schema).then(sample => res.json(sample));
+}
+
+function getEvent(req, res) {
+  var date = req.swagger.params.date.value || '2020-03-01';
+  var title = util.format('Hey %s', date);
   res.json([
     {
       "id": '' + faker.random.number(),
-      "name": name + ' by ' + faker.name.findName(),
-      "location": "Minsk, Independence av. 152",
+      "date": date,
+      "band": "XYZ",
       "image": "fest.jpg",
-      "date": date
-    },
-    {
-      "id": '' + faker.random.number(),
-      "name": name + ' by ' + faker.name.findName(),
-      "location": "Minsk, Independence av. 152",
-      "image": "fest.jpg",
-      "date": date
+      "time": "2021-04-14",
+      "place": "Minsk, Independence av. 152",
+      "songs": [{
+        "id": "12",
+        "title": title,
+        "time": 120
+      }],
     }
   ]);
 }

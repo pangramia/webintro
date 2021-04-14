@@ -12,27 +12,24 @@ class WeeklyScheduler extends React.Component {
 
     constructor(props) {
         super(props);
-        const dateParam =  this.props.match?.params.id || moment().format('YYYY-MM-DD');
+        const dateParam = this.props.match?.params.id || moment().format('YYYY-MM-DD');
         const parsedDate = moment(dateParam, "YYYY-MM-DD")
 
         const nearestWeekend = parsedDate.startOf('week').isoWeekday(0);
         const endDate = moment(nearestWeekend).add(6, 'day');
-        
-        console.log("Enddate", nearestWeekend.toString(),  endDate.toString())
+
+        console.log("Enddate", nearestWeekend.toString(), endDate.toString())
 
         const startWeek = nearestWeekend.format("YYYY-MM-DD")
         const endWeek = endDate.format("YYYY-MM-DD")
-        
- 
+
+
 
         // TODO reuse data to service from https://citydog.by/post/play-musykanty/
-        this.state = { 
-            events: [
-                {id:'xyz1', date: "2021-04-21", band: "Какора", image: "", time: "19:00", place:"Cultural Hub Ok16"},
-                {id:'xyz2', date: "2021-04-29", band: "Mustelide", image: "", time: "19:00", place:"Cultural Hub Ok16"}
-            ],
+        this.state = {
+            events: [],
             start: startWeek,
-            end:  endWeek
+            end: endWeek
 
         };
 
@@ -43,8 +40,8 @@ class WeeklyScheduler extends React.Component {
 
 
     async handleReload(event) {
-        //const response = await api.events({ date: '2021-03-25'/*this.state.targetDate*/ });
-        //this.setState({ start: "2021-04-01" });
+        const response = await api.events({ date: this.state.startWeek });
+        this.setState({ events: response });
     }
 
 
@@ -54,9 +51,9 @@ class WeeklyScheduler extends React.Component {
             <h2>Weekly highlights</h2>
             <h3>Upcoming events from  <Moment format="YYYY/MM/DD">{this.state.start}</Moment> to <Moment format="YYYY/MM/DD">{this.state.end}</Moment> </h3>
             <div>
-               {this.state.events.map(
-                   (event) => 
-                        <div key={event.id}>{event.id} {event.band}  is performing on <Link to ={`/timetable/${event.date}`}>  {event.date} </Link>  at {event.time} in {event.place}</div>)}
+                {this.state.events.map(
+                    (event) =>
+                        <div key={event.id}>{event.id} {event.band}  is performing on <Link to={`/timetable/${event.date}`}>  {event.date} </Link>  at {event.time} in {event.place}</div>)}
             </div>
         </div>
     }

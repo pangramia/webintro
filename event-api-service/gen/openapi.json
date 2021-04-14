@@ -8,14 +8,52 @@
     "url" : "http://localhost:10010/api/v1"
   } ],
   "paths" : {
-    "/events" : {
+    "/timetable" : {
       "get" : {
-        "description" : "Returns list of city event",
+        "description" : "Returns list of city event, starting from a date",
         "operationId" : "events",
         "parameters" : [ {
           "name" : "date",
           "in" : "query",
           "description" : "Filtering date",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventsResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "x-swagger-router-controller" : "event-controller"
+    },
+    "/timetable/{date}" : {
+      "get" : {
+        "description" : "Returns info on certain date events",
+        "operationId" : "event",
+        "parameters" : [ {
+          "name" : "date",
+          "in" : "path",
+          "description" : "target date",
+          "required" : true,
           "schema" : {
             "type" : "string"
           }
@@ -58,23 +96,45 @@
         }
       },
       "Event" : {
-        "required" : [ "id" ],
         "type" : "object",
         "properties" : {
           "id" : {
             "type" : "string"
           },
-          "name" : {
+          "date" : {
+            "type" : "string"
+          },
+          "band" : {
             "type" : "string"
           },
           "image" : {
             "type" : "string"
           },
-          "date" : {
+          "time" : {
             "type" : "string"
           },
-          "location" : {
+          "place" : {
             "type" : "string"
+          },
+          "songs" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Song"
+            }
+          }
+        }
+      },
+      "Song" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "time" : {
+            "type" : "number"
           }
         }
       },

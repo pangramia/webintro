@@ -8,7 +8,7 @@ var config = {
   appRoot: __dirname // required config
 };
 
-SwaggerExpress.create(config, function(err, swaggerExpress) {
+SwaggerExpress.create(config, function (err, swaggerExpress) {
   if (err) { throw err; }
 
   // install middleware
@@ -17,7 +17,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   var port = process.env.PORT || 10010;
   app.listen(port);
 
-  if (swaggerExpress.runner.swagger.paths['/events']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/api/v1/events?date=2021-02-22');
+  if (swaggerExpress.runner.swagger.paths['/timetable']) {
+    console.log('try this:\ncurl http://127.0.0.1:' + port + '/api/v1/timetable?date=2021-02-22');
   }
 });

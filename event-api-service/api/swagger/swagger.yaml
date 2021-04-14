@@ -17,11 +17,11 @@ consumes:
 produces:
   - application/json
 paths:
-  /events:
+  /timetable:
     # binds a127 app logic to a route
     x-swagger-router-controller: event-controller
     get:
-      description: Returns list of city event
+      description: Returns list of city event, starting from a date
       # used as the method name of the controller
       operationId: events
       parameters:
@@ -41,6 +41,30 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /timetable/{date}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: event-controller
+    get:
+      description: Returns info on certain date events 
+      # used as the method name of the controller
+      operationId: event
+      parameters:
+        - name: date
+          in: path
+          description: target date
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/EventsResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"            
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -51,19 +75,33 @@ definitions:
         $ref:  "#/definitions/Event"
         
   Event:
-    required:
-      - id
     properties:
       id:
-        type: string      
-      name:
-        type: string    
-      image:
         type: string
       date:
         type: string 
-      location:
+      band:
         type: string
+      image:
+        type: string 
+      time:
+        type: string   
+      place:
+        type: string
+      songs:
+        type: array    
+        items:
+          $ref:  "#/definitions/Song"
+
+  Song:
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      time:
+        type: number
+  
         
   ErrorResponse:
     required:

@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    Song,
+    SongFromJSON,
+    SongFromJSONTyped,
+    SongToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -24,19 +31,7 @@ export interface Event {
      * @type {string}
      * @memberof Event
      */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Event
-     */
-    image?: string;
+    id?: string;
     /**
      * 
      * @type {string}
@@ -48,7 +43,31 @@ export interface Event {
      * @type {string}
      * @memberof Event
      */
-    location?: string;
+    band?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Event
+     */
+    image?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Event
+     */
+    time?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Event
+     */
+    place?: string;
+    /**
+     * 
+     * @type {Array<Song>}
+     * @memberof Event
+     */
+    songs?: Array<Song>;
 }
 
 export function EventFromJSON(json: any): Event {
@@ -61,11 +80,13 @@ export function EventFromJSONTyped(json: any, ignoreDiscriminator: boolean): Eve
     }
     return {
         
-        'id': json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'image': !exists(json, 'image') ? undefined : json['image'],
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'date': !exists(json, 'date') ? undefined : json['date'],
-        'location': !exists(json, 'location') ? undefined : json['location'],
+        'band': !exists(json, 'band') ? undefined : json['band'],
+        'image': !exists(json, 'image') ? undefined : json['image'],
+        'time': !exists(json, 'time') ? undefined : json['time'],
+        'place': !exists(json, 'place') ? undefined : json['place'],
+        'songs': !exists(json, 'songs') ? undefined : ((json['songs'] as Array<any>).map(SongFromJSON)),
     };
 }
 
@@ -79,10 +100,12 @@ export function EventToJSON(value?: Event | null): any {
     return {
         
         'id': value.id,
-        'name': value.name,
-        'image': value.image,
         'date': value.date,
-        'location': value.location,
+        'band': value.band,
+        'image': value.image,
+        'time': value.time,
+        'place': value.place,
+        'songs': value.songs === undefined ? undefined : ((value.songs as Array<any>).map(SongToJSON)),
     };
 }
 
