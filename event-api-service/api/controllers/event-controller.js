@@ -96,12 +96,14 @@ var schema = {
   Param 2: a handle to the response object
  */
 function getEvents(req, res) {
-  // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
-  var date = req.swagger.params.date.value || '2020-03-01';
-  var title = util.format('Hey %s', date);
-
-  // this sends back a JSON response which is a single string
-  jsf.resolve(schema).then(sample => res.json(sample));
+  // Access query parameter directly from req.query
+  var date = req.query.date || '2020-03-01';
+  
+  // Generate sample data with the date
+  jsf.resolve(schema).then(sample => {
+    // Optionally modify the sample data with the date if needed
+    res.json(sample);
+  });
 }
 
 function getEvent(req, res) {
