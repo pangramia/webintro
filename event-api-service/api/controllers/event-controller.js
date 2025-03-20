@@ -96,8 +96,8 @@ var schema = {
   Param 2: a handle to the response object
  */
 function getEvents(req, res) {
-  // Access query parameter directly from req.query
-  var date = req.query.date || '2020-03-01';
+  // Access query parameter through Swagger params
+  var date = req.swagger.params.date.value || '2020-03-01';
   
   // Generate sample data with the date
   jsf.resolve(schema).then(sample => {
